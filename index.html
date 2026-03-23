@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☄️ Portfolio | Stellar E-Portfolio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cormorant+Garamond:ital,wght@0,500;1,600&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-deep: #05070A;        
+            --card-base: rgba(15, 20, 30, 0.7);
+            --sui-blue: #97D5F7;       
+            --sui-gold: #E5C385;       
+            --sui-mint: #A0FECB;       
+            --sui-purple: #4A4766;     
+            --text-main: #EAECEF;      
+            --font-header: 'Cinzel', serif;
+            --font-body: 'Cormorant Garamond', 'Noto Sans TC', serif;
+            --accent-glow: rgba(229, 195, 133, 0.3);
+            --status-green: #27C93F;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            scroll-behavior: smooth; 
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.8;
+            letter-spacing: 0.03rem;
+        }
+
+        /* Star Canvas Background */
+        #star-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0B1221 0%, #05070A 100%);
+        }
+
+        /* Navigation Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 10%;
+            background: rgba(5, 7, 10, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(229, 195, 133, 0.15);
+        }
+
+        .logo {
+            font-family: var(--font-header);
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .nav-links button {
+            font-family: var(--font-header);
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            margin-left: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            opacity: 0.7;
+        }
+
+        .nav-links button:hover { 
+            color: var(--sui-gold); 
+            opacity: 1;
+            text-shadow: 0 0 12px rgba(229, 195, 133, 0.6);
+        }
+
+        /* Main Container */
+        .wrapper {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+            padding: 40px 10%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: rgba(15, 20, 30, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(229, 195, 133, 0.25);
+            border-radius: 12px;
+            padding: 40px 30px 50px;
+            height: fit-content;
+            position: sticky; top: 120px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .sidebar:hover {
+            transform: translateY(-8px);
+            border-color: var(--sui-gold);
+            box-shadow: 0 30px 60px rgba(229, 195, 133, 0.1);
+        }
+
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-header);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--status-green);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            background: rgba(39, 201, 63, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(39, 201, 63, 0.2);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--status-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--status-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            background: radial-gradient(circle, rgba(151, 213, 247, 0.15) 0%, transparent 75%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 15px var(--sui-blue));
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .comet-svg {
+            width: 60px;
+            height: 60px;
+            transform: rotate(-15deg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(8deg); }
+        }
+
+        .sidebar h3 {
+            font-family: var(--font-header);
+            letter-spacing: 4px;
+            margin: 0;
+            color: var(--sui-gold);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            font-family: var(--font-header);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            margin-top: 10px;
+            opacity: 0.6;
+        }
+
+        .skills-list {
+            margin-top: 35px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            border-top: 1px solid rgba(229, 195, 133, 0.2);
+            padding-top: 25px;
+        }
+
+        .skills-list p { 
+            margin: 15px 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            transition: 0.3s;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        
+        .skills-list p:hover {
+            color: var(--sui-gold);
+            transform: translateX(8px);
+            opacity: 1;
+        }
+        
+        .skills-list i { color: var(--sui-gold); width: 20px; font-size: 1.1rem; }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--card-base);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 195, 133, 0.1);
+            border-radius: 16px;
+            padding: 60px;
+            margin-bottom: 45px;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .content-section:hover {
+            transform: scale(1.01);
+            background: rgba(25, 30, 45, 0.8);
+            border-color: rgba(229, 195, 133, 0.3);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            font-family: var(--font-header);
+            font-size: 1.8rem;
+            letter-spacing: 5px;
+            margin-top: 0;
+            margin-bottom: 40px;
+            color: var(--sui-gold);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h2::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--sui-gold), transparent);
+            opacity: 0.2;
+        }
+
+        .project-item {
+            position: relative;
+            padding: 25px;
+            margin-bottom: 40px;
+            border-left: 3px solid var(--sui-purple);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0 12px 12px 0;
+            transition: all 0.4s ease;
+            scroll-margin-top: 120px;
+        }
+
+        .project-item:hover {
+            border-left-color: var(--sui-gold);
+            background: rgba(229, 195, 133, 0.05);
+            padding-left: 35px;
+        }
+
+        .project-title {
+            font-family: var(--font-header);
+            color: var(--sui-gold);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* Image Slot Styling */
+        .project-image-slot {
+            margin-top: 20px;
+            width: 100%;
+            height: 250px; 
+            border: 1px solid rgba(229, 195, 133, 0.15);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image-slot span {
+            font-family: var(--font-header);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: absolute;
+            z-index: 1;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 10px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        /* Image fill rule */
+        .project-image-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        /* Terminal Styling */
+        .terminal-container {
+            background: #080A0F;
+            border: 1px solid #1A1D23;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 30px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+        }
+        
+        .term-bar {
+            background: #14181E;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2A2F3A;
+        }
+
+        .dots { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-r { background: #FF5F56; }
+        .dot-y { background: #FFBD2E; }
+        .dot-g { background: #27C93F; }
+
+        .term-label { font-size: 0.75rem; font-family: monospace; color: #6A7588; letter-spacing: 1.5px; }
+
+        .term-body {
+            padding: 35px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #A0AEC0;
+            line-height: 1.8;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .code-keyword { color: #C586C0; }
+        .code-func { color: #DCDCAA; }
+        .code-str { color: #CE9178; }
+        .code-type { color: #569CD6; }
+        .code-num { color: #B5CEA8; }
+        .code-comment { color: #6A9955; font-style: italic; }
+
+        .run-btn {
+            font-family: var(--font-header);
+            background: transparent;
+            border: 2px solid var(--sui-gold);
+            color: var(--sui-gold);
+            padding: 16px;
+            width: 100%;
+            margin-top: 30px;
+            cursor: pointer;
+            letter-spacing: 5px;
+            transition: all 0.4s;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            border-radius: 6px;
+        }
+
+        .run-btn:hover {
+            background: var(--sui-gold);
+            color: var(--bg-deep);
+            box-shadow: 0 0 40px rgba(229, 195, 133, 0.4);
+            transform: scale(1.02);
+        }
+
+        #output {
+            margin-top: 25px;
+            padding: 25px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: var(--sui-blue);
+            display: none;
+            border-left: 4px solid var(--sui-gold);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 15px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: var(--sui-gold);
+            transition: width 0.4s ease;
+            box-shadow: 0 0 15px var(--sui-gold);
+        }
+
+        footer {
+            text-align: center;
+            padding: 100px 0 60px;
+            font-family: var(--font-header);
+            letter-spacing: 6px;
+            font-size: 0.8rem;
+            opacity: 0.4;
+            color: var(--sui-gold);
+        }
+
+        @media (max-width: 1024px) {
+            .wrapper { grid-template-columns: 1fr; padding: 20px 5%; }
+            .sidebar { position: relative; top: 0; width: 100%; margin-bottom: 40px; }
+            header { padding: 1.2rem 5%; }
+            .content-section { padding: 40px 30px; }
+            .logo { font-size: 1.3rem; letter-spacing: 3px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="star-canvas"></canvas>
+
+    <header>
+        <div class="logo">Portfolio</div>
+        <nav class="nav-links">
+            <button onclick="gs('profile')">PROLOGUE</button>
+            <button onclick="gs('archive')">ARCHIVE</button>
+            <button onclick="gs('terminal')">CODE</button>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="system-status">
+                <div class="status-dot"></div>
+                System Online
+            </div>
+
+            <div class="profile-avatar">
+                <svg class="comet-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="comet-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--sui-blue);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:var(--sui-mint);stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="tail-grad" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--sui-blue);stop-opacity:0.6" />
+                            <stop offset="100%" style="stop-color:transparent;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 50 L10 90 L30 60 L10 70 Z" fill="url(#tail-grad)" />
+                    <path d="M50 50 L30 95 L45 65 L25 85 Z" fill="url(#tail-grad)" opacity="0.5" />
+                    <circle cx="55" cy="45" r="18" fill="url(#comet-grad)" />
+                    <circle cx="55" cy="45" r="8" fill="white" opacity="0.4" />
+                </svg>
+            </div>
+            
+            <h3>Learning File</h3>
+            <div class="tagline">DEVELOPER & CODE ENTHUSIAST</div>
+            
+            <div class="skills-list">
+                <p onclick="gs('item-cpp')"><i class="fa-solid fa-code"></i> C++ / Python</p>
+                <p onclick="gs('item-eng')"><i class="fa-solid fa-graduation-cap"></i> English Achievement</p>
+                <p onclick="gs('item-web')"><i class="fa-solid fa-laptop-code"></i> Web Design Learning</p>
+                <p onclick="gs('item-phys')"><i class="fa-solid fa-microscope"></i> Physic Experiment</p>
+            </div>
+        </aside>
+
+        <main>
+            <section id="profile" class="content-section">
+                <h2>The Prologue</h2>
+                <p>
+                    Welcome to the central archive of my <strong>PORTFOLIO</strong>. This space serves as a personal laboratory for exploration and creation, intended for honing my skills while presenting my past achievements.
+                </p>
+                <p style="margin-top: 20px; font-style: italic; opacity: 0.9;">
+                    My journey is defined by four fundamental orbits:
+                </p>
+                <ul style="list-style: none; padding-left: 0; margin-top: 25px;">
+                    <li style="margin-bottom: 20px;">
+                        <strong style="color: var(--sui-gold);">C++ / Python:</strong> Constructing the architectural backbone of complex algorithms and system-level performance.
+                    </li>
+                    <li style="margin-bottom: 20px;">
+                        <strong style="color: var(--sui-gold);">English Achievement:</strong> Leveraging linguistic proficiency to connect, research, and present ideas on a global stage.
+                    </li>
+                    <li style="margin-bottom: 20px;">
+                        <strong style="color: var(--sui-gold);">Web Design Learning:</strong> Crafting immersive digital environments where interactivity meets cosmic visual depth.
+                    </li>
+                    <li style="margin-bottom: 20px;">
+                        <strong style="color: var(--sui-gold);">Physic Experiment:</strong> Exploring the laws of the universe through empirical data and mechanical simulation.
+                    </li>
+                </ul>
+            </section>
+
+            <section id="archive" class="content-section">
+                <h2>Learning Archive</h2>
+                
+                <div id="item-cpp" class="project-item">
+                    <p class="project-title"><i class="fa-solid fa-code" style="margin-right:10px; font-size:0.9em;"></i> C++ / Python</p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; opacity: 0.75;">
+                        Learning the fundamentals of programming.
+                    </p>
+                    <div class="project-image-slot">
+                        <span>Simulation Artifact</span>
+                        <img src="https://images5.alphacoders.com/134/1349338.png" alt="C++ Project">
+                    </div>
+                </div>
+
+                <div id="item-eng" class="project-item">
+                    <p class="project-title"><i class="fa-solid fa-graduation-cap" style="margin-right:10px; font-size:0.9em;"></i> English Achievement</p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; opacity: 0.75;">
+                        Advanced linguistic achievements and academic growth.
+                    </p>
+                    <div class="project-image-slot">
+                        <span>Certification / Essay Preview</span>
+                        <img src="https://images5.alphacoders.com/134/1349338.png" alt="English Achievement">
+                    </div>
+                </div>
+
+                <div id="item-web" class="project-item">
+                    <p class="project-title"><i class="fa-solid fa-laptop-code" style="margin-right:10px; font-size:0.9em;"></i> Web Design Learning</p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; opacity: 0.75;">
+                        Building websites using AI and modern HTML/CSS/JS.
+                    </p>
+                    <div class="project-image-slot">
+                        <span>UI Interface Sketch</span>
+                        <img src="https://images5.alphacoders.com/134/1349338.png" alt="Web Design Project">
+                    </div>
+                </div>
+
+                <div id="item-phys" class="project-item">
+                    <p class="project-title"><i class="fa-solid fa-microscope" style="margin-right:10px; font-size:0.9em;"></i> Physic Experiment</p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; opacity: 0.75;">
+                        A school project searching for the wavelengths of light.
+                    </p>
+                    <div class="project-image-slot">
+                        <span>Spectroscopy Data Image</span>
+                        <img src="https://images5.alphacoders.com/134/1349338.png" alt="Physics Project">
+                    </div>
+                </div>
+            </section>
+
+            <section id="terminal" class="content-section">
+                <h2>Code Execution</h2>
+                <div class="terminal-container">
+                    <div class="term-bar">
+                        <div class="dots">
+                            <div class="dot dot-r"></div>
+                            <div class="dot dot-y"></div>
+                            <div class="dot dot-g"></div>
+                        </div>
+                        <div class="term-label">STELLAR_CODE.CPP — SYSTEM BOOT</div>
+                    </div>
+                    <div class="term-body">
+                        <div><span class="code-comment">// Initialize system logic</span></div>
+                        <div><span class="code-keyword">#include</span> <span class="code-str">&lt;iostream&gt;</span></div>
+                        <br>
+                        <div><span class="code-type">int</span> <span class="code-func">main</span>() {</div>
+                        <div style="padding-left:25px;">
+                            <span class="code-type">const char*</span> status = <span class="code-str">"SYSTEM_READY"</span>;
+                        </div>
+                        <div style="padding-left:25px;">
+                            std::cout &lt;&lt; <span class="code-str">"Booting Portfolio Code..."</span> &lt;&lt; std::endl;
+                        </div>
+                        <div style="padding-left:25px;">
+                            <span class="code-keyword">return</span> <span class="code-num">0</span>;
+                        </div>
+                        <div>}</div>
+                    </div>
+                </div>
+                
+                <button class="run-btn" id="run-trigger" onclick="runSimulation()">Execute Sequence</button>
+                
+                <div id="output">
+                    <div class="progress-container">
+                        <div class="progress-bar" id="p-bar"></div>
+                    </div>
+                    <div id="output-text"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>☄️ SHINE BRIGHT, STELLAR PROJECT 2026</p>
+    </footer>
+
+    <script>
+        function gs(id) { 
+            const el = document.getElementById(id);
+            if (!el) return;
+            const headerOffset = 100;
+            const elementPosition = el.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+
+        async function runSimulation() {
+            const out = document.getElementById('output');
+            const pBar = document.getElementById('p-bar');
+            const txt = document.getElementById('output-text');
+            const btn = document.getElementById('run-trigger');
+
+            btn.disabled = true;
+            btn.innerText = "Processing System...";
+            out.style.display = 'block';
+            txt.innerHTML = "<span style='color:#6A7588'>[SYSTEM]</span> Initializing compile environment (g++ v11.2)...";
+            pBar.style.width = "0%";
+            
+            await new Promise(r => setTimeout(r, 800));
+            pBar.style.width = "35%";
+            txt.innerHTML += "<br><span style='color:#6A7588'>[SYSTEM]</span> Loading Stellar static assets...";
+            
+            await new Promise(r => setTimeout(r, 1000));
+            pBar.style.width = "75%";
+            txt.innerHTML += "<br><span style='color:#6A7588'>[SYSTEM]</span> Establishing secure connection & logic protocol...";
+            
+            await new Promise(r => setTimeout(r, 1200));
+            pBar.style.width = "100%";
+            txt.innerHTML += "<br><br><span style='color:var(--sui-gold)'>➜ SUCCESS: Portfolio Code Initialized.</span>";
+            txt.innerHTML += "<br><span style='color:#27C93F'>➜ PROCESS COMPLETE [Exit Code 0]</span>";
+            
+            btn.disabled = false;
+            btn.innerText = "Sequence Complete";
+            setTimeout(() => { btn.innerText = "Execute Sequence"; }, 3000);
+        }
+
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [], comets = [];
+        let mouse = { x: -1000, y: -1000 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = Array.from({length: 150}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.8 + 0.2,
+                speed: 0.0003 + Math.random() * 0.001,
+                phase: Math.random() * Math.PI * 2,
+                color: Math.random() > 0.8 ? '#E5C385' : '#FFFFFF'
+            }));
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(s => {
+                const time = Date.now() * s.speed + s.phase;
+                const opacity = (Math.sin(time) + 1) / 2 * 0.5 + 0.3;
+                const dx = mouse.x - s.x;
+                const dy = mouse.y - s.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                let ox = 0, oy = 0;
+                if(dist < 250) {
+                    const power = (250 - dist) / 250;
+                    ox = dx * 0.05 * power;
+                    oy = dy * 0.05 * power;
+                }
+                ctx.fillStyle = s.color;
+                ctx.globalAlpha = opacity;
+                ctx.beginPath();
+                ctx.arc(s.x + ox, s.y + oy, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            if (Math.random() < 0.015 && comets.length < 4) {
+                comets.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * (canvas.height / 2),
+                    len: Math.random() * 150 + 80,
+                    speed: Math.random() * 12 + 6,
+                    opacity: 1
+                });
+            }
+            comets.forEach((c, i) => {
+                const grad = ctx.createLinearGradient(c.x, c.y, c.x - c.len, c.y - c.len);
+                grad.addColorStop(0, `rgba(151, 213, 247, ${c.opacity})`);
+                grad.addColorStop(1, 'transparent');
+                ctx.globalAlpha = 1;
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(c.x, c.y);
+                ctx.lineTo(c.x - c.len, c.y - c.len);
+                ctx.stroke();
+                c.x += c.speed;
+                c.y += c.speed;
+                c.opacity -= 0.015;
+                if (c.opacity <= 0) comets.splice(i, 1);
+            });
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+    </script>
+</body>
+</html>
